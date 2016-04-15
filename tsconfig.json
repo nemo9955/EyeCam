@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "sourceMap": true,
+        "outFile": "./bin/Main.js",
+        "noResolve": true,
+        "noImplicitAny": true
+    }
+}
