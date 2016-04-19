@@ -2,6 +2,9 @@
 /// <reference path="../typings/three.js-r74/three-editorcontrols.d.ts" />
 /// <reference path="../typings/three.js-r74/three-trackballcontrols.d.ts" />
 
+/// <reference path="../typings/DragControls.d.ts" />
+/// <reference path="../typings/stats.d.ts" />
+
 /**
 *	created by Mogoi Adrian
 *
@@ -13,14 +16,20 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, screenRealX() / screenRealY(), 0.1, 1000);
 var renderer = new THREE.WebGLRenderer(); document.body.appendChild(renderer.domElement);
 
+// var camContr: THREE.EditorControls | THREE.TrackballControls;
 var camContr = new THREE.EditorControls(camera, renderer.domElement)
-var dragContr = new (<any>THREE).DragControls(camera, scene, renderer.domElement)
+var dragContr: THREE.DragControls;
 
+var clock = new THREE.Clock()
+
+var stats = new Stats();
 
 function preLoading() {
-
+    document.body.appendChild(stats.dom);
 
     window.addEventListener('resize', resizeWindow, false);
+    dragContr = new THREE.DragControls(camera, scene, renderer.domElement)
+
 
     postLoading()
 
@@ -35,12 +44,10 @@ function postLoading() {
     camera.position.y = 40;
     camera.position.z = 50;
     camera.lookAt(scene.position)
-    
-    //TODO activeaza cand este deasupra unui obiect mutabil
-    // dragContr.activate()
-    // dragContr.enabled = true;
 
-    // camContr.enabled = false;
+    //TODO activeaza cand este deasupra unui obiect mutabil
+    dragContr.enabled = true;
+
 
     resizeWindow()
     renderFrame();
@@ -88,9 +95,13 @@ function createSceneProps() {
 
 
 function renderFrame() {
+    stats.begin()
 
     renderer.setClearColor(0xdddddd, 1);
     renderer.render(scene, camera);
+
+    stats.end()
+
 
     requestAnimationFrame(renderFrame);
 }
@@ -101,6 +112,7 @@ function screenRealY() { return window.innerHeight - 110 };
 function resizeWindow() {
     camera.aspect = screenRealX() / screenRealY();
     camera.updateProjectionMatrix()
+    // camContr.update()
     renderer.setSize(screenRealX(), screenRealY());
 
 }
